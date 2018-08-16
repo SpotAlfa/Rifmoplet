@@ -1,0 +1,16 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+    "build_systems":
+    [
+        {
+            "name": "List",
+            "cmd": "list.bat",
+            "quiet": true
+        }
+    ]
+}
