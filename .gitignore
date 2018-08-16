@@ -1,0 +1,12 @@
+# CSharp project
+
+cs/.vs
+cs/bin
+cs/lib
+cs/obj
+
+# PHP project
+
+php/.idea
+php/vendor
+php/docs/phpdocumentor
