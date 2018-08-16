@@ -1,9 +1,9 @@
 # CSharp project
 
-cs/.vs
-cs/bin
-cs/lib
-cs/obj
+cs/*/.vs
+cs/*/bin
+cs/*/lib
+cs/*/obj
 
 # PHP project
 
