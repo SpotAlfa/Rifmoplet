@@ -1,9 +1,13 @@
 # CSharp project
 
-cs/*/.vs
+cs/.vs
+
 cs/*/bin
 cs/*/lib
 cs/*/obj
+
+cs/TestResults
+cs/packages
 
 # PHP project
 
