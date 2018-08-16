@@ -3,4 +3,11 @@ checks:
 
 filter:
   excluded_paths:
-    - tests
+    - php/tests/*
+
+build:
+  nodes:
+    analysis:
+      tests:
+        override:
+          - php-scrutinizer-run
