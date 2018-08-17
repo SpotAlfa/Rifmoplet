@@ -34,7 +34,7 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * Tests if logger generally works correct.
+     * Tests if the logger generally works correct.
      */
     public function testLogPlainText(): void
     {
