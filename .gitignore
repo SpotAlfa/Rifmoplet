@@ -14,3 +14,7 @@ cs/packages
 php/.idea
 php/vendor
 php/docs/phpdocumentor
+
+# Common ST config
+
+Rifmoplet.sublime-workspace
