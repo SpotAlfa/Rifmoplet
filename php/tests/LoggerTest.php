@@ -18,11 +18,7 @@ use PHPUnit\Framework\TestCase;
  */
 class LoggerTest extends TestCase
 {
-    /**
-     * Logger instance.
-     *
-     * @var Logger
-     */
+    /** @var Logger logger instance */
     private $stub;
 
     /**
