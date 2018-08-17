@@ -43,7 +43,7 @@ class TextIteratorTest extends TestCase
     public function testPrevious(int $next, int $expected): void
     {
         $match = function (string $char): bool {
-            return (bool)preg_match('/[AEOIU]/', $char);
+            return (bool)preg_match('/[AEOIUWY]/', $char);
         };
 
         $this->stub->rewind();
@@ -66,7 +66,7 @@ class TextIteratorTest extends TestCase
     public function testFollowing(int $next, int $expected): void
     {
         $match = function (string $char): bool {
-            return (bool)preg_match('/[AEOIU]/', $char);
+            return (bool)preg_match('/[AEOIUWY]/', $char);
         };
 
         $this->stub->rewind();

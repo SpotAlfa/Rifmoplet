@@ -47,6 +47,17 @@ class TextIterator implements Iterator
         $this->syllables = $syllables;
     }
 
+    public function slice(int $left = 0, int $right = 0): string
+    {
+        $right += $left;
+        return substr($this->text, $this->start - $left, $this->end - $this->start + $right + 1);
+    }
+
+    public function get(): string
+    {
+        return $this->text;
+    }
+
     public function previous(callable $match): int
     {
         for ($x = 1; $x <= $this->start; $x++) {
@@ -84,7 +95,7 @@ class TextIterator implements Iterator
     {
         $this->end = $this->start + 1;
         for (; $this->valid(); $this->end++) {
-            if (preg_match('/[aeiou]/i', $this->text[$this->end])) {
+            if (preg_match('/[aeiouwy]/i', $this->text[$this->end])) {
                 if ($this->syllable == 0) {
                     $this->start = $this->end;
                 }
