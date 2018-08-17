@@ -30,6 +30,31 @@ class TextIteratorTest extends TestCase
     public function setUp(): void
     {
         $this->stub = new TextIterator(self::TEXT, 3);
+        $this->stub->rewind();
+    }
+
+    /**
+     * Tests if iterator correctly returns current substring.
+     */
+    public function testSlice(): void
+    {
+        $expected = 'O piri';
+
+        $actual = $this->stub->slice();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Tests if iterator correctly returns contained text.
+     */
+    public function testGet(): void
+    {
+        $expected = self::TEXT;
+
+        $actual = $this->stub->get();
+
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -46,7 +71,6 @@ class TextIteratorTest extends TestCase
             return (bool)preg_match('/[AEOIUWY]/', $char);
         };
 
-        $this->stub->rewind();
         for ($i = 0; $i < $next; $i++) {
             $this->stub->next();
         }
@@ -69,7 +93,6 @@ class TextIteratorTest extends TestCase
             return (bool)preg_match('/[AEOIUWY]/', $char);
         };
 
-        $this->stub->rewind();
         for ($i = 0; $i < $next; $i++) {
             $this->stub->next();
         }
