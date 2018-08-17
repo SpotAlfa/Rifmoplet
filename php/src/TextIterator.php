@@ -47,6 +47,26 @@ class TextIterator implements Iterator
         $this->syllables = $syllables;
     }
 
+    public function previous(callable $match): int
+    {
+        for ($x = 1; $x <= $this->start; $x++) {
+            if ($match($this->text[$this->start - $x])) {
+                return $x;
+            }
+        }
+        return $this->start;
+    }
+
+    public function following(callable $match): int
+    {
+        for ($x = 1, $len = $this->length - $this->end - 1; $x <= $len; $x++) {
+            if ($match($this->text[$this->end + $x])) {
+                return $x;
+            }
+        }
+        return $len;
+    }
+
     /**
      * Returns `foreach` loop value.
      *
