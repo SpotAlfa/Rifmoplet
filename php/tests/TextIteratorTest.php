@@ -33,6 +33,52 @@ class TextIteratorTest extends TestCase
     }
 
     /**
+     * Tests if the iterator correctly searches previous char matching callback.
+     *
+     * @dataProvider prevProvider
+     *
+     * @param int $next number of iterations
+     * @param int $expected expected string index
+     */
+    public function testPrevious(int $next, int $expected): void
+    {
+        $match = function (string $char): bool {
+            return (bool)preg_match('/[AEOIU]/', $char);
+        };
+
+        $this->stub->rewind();
+        for ($i = 0; $i < $next; $i++) {
+            $this->stub->next();
+        }
+        $actual = $this->stub->key() - $this->stub->previous($match);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Tests if the iterator correctly searches the following char matching callback.
+     *
+     * @dataProvider followingProvider
+     *
+     * @param int $next number of iterations
+     * @param int $expected expected string index
+     */
+    public function testFollowing(int $next, int $expected): void
+    {
+        $match = function (string $char): bool {
+            return (bool)preg_match('/[AEOIU]/', $char);
+        };
+
+        $this->stub->rewind();
+        for ($i = 0; $i < $next; $i++) {
+            $this->stub->next();
+        }
+        $actual = $this->stub->current() + $this->stub->following($match);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
      * Tests if the iterator returns valid `foreach` loop values.
      */
     public function testCurrent(): void
@@ -91,5 +137,31 @@ class TextIteratorTest extends TestCase
         }
 
         $this->assertEquals($i, $j);
+    }
+
+    /**
+     * Data provider for {@see TextIteratorTest::testPrevious()}.
+     *
+     * @return array args
+     */
+    public function prevProvider(): array
+    {
+        return [
+            [1, 2],
+            [0, 0]
+        ];
+    }
+
+    /**
+     * Data provider for {@see TextIteratorTest::testFollowing()}.
+     *
+     * @return array args
+     */
+    public function followingProvider(): array
+    {
+        return [
+            [1, 14],
+            [7, 28]
+        ];
     }
 }
