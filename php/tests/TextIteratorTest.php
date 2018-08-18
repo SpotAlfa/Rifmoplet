@@ -30,7 +30,6 @@ class TextIteratorTest extends TestCase
     public function setUp(): void
     {
         $this->stub = new TextIterator(self::TEXT, 3);
-        $this->stub->rewind();
     }
 
     /**
@@ -74,7 +73,7 @@ class TextIteratorTest extends TestCase
         for ($i = 0; $i < $next; $i++) {
             $this->stub->next();
         }
-        $actual = $this->stub->key() - $this->stub->previous($match);
+        $actual = $this->stub->previous($match);
 
         $this->assertEquals($expected, $actual);
     }
@@ -96,7 +95,7 @@ class TextIteratorTest extends TestCase
         for ($i = 0; $i < $next; $i++) {
             $this->stub->next();
         }
-        $actual = $this->stub->current() + $this->stub->following($match);
+        $actual = $this->stub->following($match);
 
         $this->assertEquals($expected, $actual);
     }
@@ -170,8 +169,8 @@ class TextIteratorTest extends TestCase
     public function prevProvider(): array
     {
         return [
-            [1, 2],
-            [0, 0]
+            [1, 3],
+            [0, false]
         ];
     }
 
@@ -183,8 +182,8 @@ class TextIteratorTest extends TestCase
     public function followingProvider(): array
     {
         return [
-            [1, 14],
-            [7, 28]
+            [1, 4],
+            [7, false]
         ];
     }
 }
