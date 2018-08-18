@@ -61,9 +61,9 @@ class RhymeDetectorTest extends TestCase
         ];
 
         /** @noinspection PhpUndefinedMethodInspection */
-        ($args[3][0])->next();
+        $args[3][0]->next();
         /** @noinspection PhpUndefinedMethodInspection */
-        ($args[3][1])->next();
+        $args[3][1]->next();
 
         return $args;
     }
