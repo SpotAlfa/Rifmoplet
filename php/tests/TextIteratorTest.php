@@ -12,7 +12,7 @@ use SpotAlfa\Rifmoplet\TextIterator;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests TextIterator.
+ * Tests {@see TextIterator}.
  *
  * @package SpotAlfa\Rifmoplet\Tests
  */

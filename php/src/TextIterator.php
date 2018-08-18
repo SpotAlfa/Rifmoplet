@@ -13,7 +13,7 @@ use Iterator;
 /**
  * Iterates through given string.
  *
- * Selects all substrings containing exact syllables.
+ * Selects all substrings containing exact number of syllables.
  *
  * @package SpotAlfa\Rifmoplet
  */
