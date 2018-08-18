@@ -45,6 +45,8 @@ class TextIterator implements Iterator
         $this->text = $text;
         $this->length = strlen($text);
         $this->syllables = $syllables;
+
+        $this->rewind();
     }
 
     public function slice(int $left = 0, int $right = 0): string
@@ -58,24 +60,24 @@ class TextIterator implements Iterator
         return $this->text;
     }
 
-    public function previous(callable $match): int
+    public function previous(callable $match)
     {
         for ($x = 1; $x <= $this->start; $x++) {
             if ($match($this->text[$this->start - $x])) {
                 return $x;
             }
         }
-        return $this->start;
+        return false;
     }
 
-    public function following(callable $match): int
+    public function following(callable $match)
     {
         for ($x = 1, $len = $this->length - $this->end - 1; $x <= $len; $x++) {
             if ($match($this->text[$this->end + $x])) {
                 return $x;
             }
         }
-        return $len;
+        return false;
     }
 
     /**
@@ -134,7 +136,7 @@ class TextIterator implements Iterator
      */
     public function rewind(): void
     {
-        $this->start = 0;
+        $this->start = -1;
         $this->end = 0;
         $this->syllable = 0;
 
