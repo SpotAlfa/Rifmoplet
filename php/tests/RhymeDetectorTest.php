@@ -12,14 +12,21 @@ use SpotAlfa\Rifmoplet\RhymeDetector;
 use PHPUnit\Framework\TestCase;
 use SpotAlfa\Rifmoplet\TextIterator;
 
+/**
+ * Tests {@see RhymeDetector}.
+ *
+ * @package SpotAlfa\Rifmoplet\Tests
+ */
 class RhymeDetectorTest extends TestCase
 {
 
     /**
+     * Tests {@see RhymeDetector} configuration.
+     *
      * @dataProvider configProvider
      *
-     * @param int $settings
-     * @param bool $expected
+     * @param int $settings config for detector
+     * @param bool $expected expected result
      */
     public function testConfigure(int $settings, bool $expected)
     {
@@ -36,11 +43,13 @@ class RhymeDetectorTest extends TestCase
     }
 
     /**
+     * Tests if {@see RhymeDetector} correctly detects rhymes.
+     *
      * @dataProvider rhymesProvider
      *
-     * @param TextIterator $first
-     * @param TextIterator $second
-     * @param bool $expected
+     * @param TextIterator $first first substring container
+     * @param TextIterator $second second substring container
+     * @param bool $expected expected result
      */
     public function testIsRhyme(TextIterator $first, TextIterator $second, bool $expected): void
     {
@@ -51,6 +60,11 @@ class RhymeDetectorTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * Provides {@see TextIterator}s and expected {@see RhymeDetector::isRhyme()} results for test.
+     *
+     * @return array args for {@see RhymeDetectorTest::testIsRhyme()}
+     */
     public function rhymesProvider(): array
     {
         $args = [
@@ -68,6 +82,11 @@ class RhymeDetectorTest extends TestCase
         return $args;
     }
 
+    /**
+     * Provides configurations for {@see RhymeDetector} and expected {@see RhymeDetector::isRhyme()} results.
+     *
+     * @return array args for {@see RhymeDetectorTest::testConfigure()}
+     */
     public function configProvider(): array
     {
         return [
