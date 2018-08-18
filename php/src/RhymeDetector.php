@@ -8,29 +8,57 @@
 
 namespace SpotAlfa\Rifmoplet;
 
-
+/**
+ * Detects rhymes.
+ *
+ * @package SpotAlfa\Rifmoplet
+ */
 class RhymeDetector
 {
+    /** @var int flag for non-strict comparison of *E* and *I* */
     public const WEAK_E = 1;
+    /** @var int flag for non-strict comparison of *O* and *A* */
     public const WEAK_O = 2;
+    /** @var int flag used to allow accent shift */
     public const ACCENT_SHIFT = 4;
 
+    /** @var int flags bitmask */
     private $settings = 0;
 
+    /** @var TextIterator first substring container */
     private $first;
+    /** @var TextIterator second substring container */
     private $second;
 
+    /**
+     * RhymeDetector constructor.
+     *
+     * @param TextIterator $first {@see RhymeDetector::$first}
+     * @param TextIterator $second {@see RhymeDetector::$second}
+     */
     public function __construct(TextIterator $first, TextIterator $second)
     {
         $this->first = $first;
         $this->second = $second;
     }
 
+    /**
+     * Configures detector options.
+     *
+     * @param int $settings flags to use
+     */
     public function configure(int $settings): void
     {
         $this->settings = $settings;
     }
 
+    /**
+     * Main method.
+     *
+     * Tests if {@see RhymeDetector::$first} matches {@see RhymeDetector::$second} as a rhyme.
+     *
+     * @return bool the result of the checkout
+     */
     public function isRhyme(): bool
     {
         if (!$this->hasAttr(self::ACCENT_SHIFT) && $this->hasAccentShift()) {
@@ -45,6 +73,11 @@ class RhymeDetector
         }
     }
 
+    /**
+     * Checks if there are possible accent shift between {@see RhymeDetector::$first} and {@see RhymeDetector::$second}.
+     *
+     * @return bool the result of the checkout
+     */
     private function hasAccentShift(): bool
     {
         $vowel = function (string $char): bool {
@@ -73,6 +106,14 @@ class RhymeDetector
         return $start || $end;
     }
 
+    /**
+     * Merges stressed syllables.
+     *
+     * _aOOu_, _eiow_ -> _aOOu_, _eIOw
+     *
+     * @param string $first first string
+     * @param string $second second string
+     */
     private function mergeStressed(string &$first, string &$second): void
     {
         $firstStressed = '';
@@ -91,6 +132,13 @@ class RhymeDetector
         $second = strtolower($secondStressed);
     }
 
+    /**
+     * Keeps only vowels in string.
+     *
+     * @param string $subj string to filter
+     *
+     * @return string filtered string
+     */
     private function filterVowels(string $subj): string
     {
         $xres = implode(
@@ -104,11 +152,26 @@ class RhymeDetector
         return $xres;
     }
 
+    /**
+     * Checks if the given character is upper.
+     *
+     * @param string $char character to check
+     *
+     * @return bool the result of the checkout
+     */
     private function isUpper(string $char): bool
     {
         return $char == strtoupper($char);
     }
 
+    /**
+     * Another complicated string comparison method.
+     *
+     * @param string $first first string
+     * @param string $second second string
+     *
+     * @return bool true if given strings are equal
+     */
     private function equals(string $first, string $second): bool
     {
         if ($first == '' && $second == '') {
@@ -135,6 +198,13 @@ class RhymeDetector
         return $equals;
     }
 
+    /**
+     * Checks if the given flag is set on in {@see RhymeDetector::$settings}.
+     *
+     * @param int $attr an attribute
+     *
+     * @return bool the result of the checkout
+     */
     private function hasAttr(int $attr): bool
     {
         return ($this->settings & $attr) != 0;
