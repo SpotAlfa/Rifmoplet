@@ -36,8 +36,8 @@ class RhymeDetector
         if (!$this->hasAttr(self::ACCENT_SHIFT) && $this->hasAccentShift()) {
             return false;
         } else {
-            $first = $this->first->slice();
-            $second = $this->second->slice();
+            $first = $this->filterVowels($this->first->slice());
+            $second = $this->filterVowels($this->second->slice());
 
             $this->mergeStressed($first, $second);
 
@@ -48,18 +48,24 @@ class RhymeDetector
     private function hasAccentShift(): bool
     {
         $vowel = function (string $char): bool {
-            return (bool)preg_match('/aeiouwy/i', $char);
+            return (bool)preg_match('/[aeiouwy]/i', $char);
         };
 
-        $firstStart = $this->isUpper($this->first[0]);
-        $firstEnd = $this->isUpper($this->first[-1]);
-        $firstNext = $this->first->get()[$this->first->following($vowel) + $this->first->current()];
-        $firstPrev = $this->first->get()[$this->first->previous($vowel) + $this->first->key()];
+        $next = $this->first->following($vowel);
+        $prev = $this->first->previous($vowel);
 
-        $secondStart = $this->isUpper($this->second[0]);
-        $secondEnd = $this->isUpper($this->second[-1]);
-        $secondNext = $this->second->get()[$this->second->following($vowel) + $this->second->current()];
-        $secondPrev = $this->second->get()[$this->second->previous($vowel) + $this->second->key()];
+        $firstStart = $this->isUpper($this->first->slice()[0]);
+        $firstEnd = $this->isUpper($this->first->slice()[-1]);
+        $firstNext = $next !== false ? $this->isUpper($this->first->get()[$next + $this->first->current()]) : false;
+        $firstPrev = $prev !== false ? $this->isUpper($this->first->get()[$this->first->key() - $prev]) : false;
+
+        $next = $this->second->following($vowel);
+        $prev = $this->second->previous($vowel);
+
+        $secondStart = $this->isUpper($this->second->slice()[0]);
+        $secondEnd = $this->isUpper($this->second->slice()[-1]);
+        $secondNext = $next !== false ? $this->isUpper($this->second->get()[$next + $this->second->current()]) : false;
+        $secondPrev = $prev !== false ? $this->isUpper($this->second->get()[$this->second->key() - $prev]) : false;
 
         $start = (!$firstStart && $secondPrev) || (!$secondStart && $firstPrev);
         $end = (!$firstEnd && $secondNext) || (!$secondEnd && $firstNext);
@@ -72,8 +78,8 @@ class RhymeDetector
         $firstStressed = '';
         $secondStressed = '';
         for ($i = 0, $len = strlen($first); $i < $len; $i++) {
-            $next = $i != 0 && ($this->isUpper($first[$i - 1]) || $this->isUpper($first[$i - 1]));
-            $prev = $i != $len - 1 && ($this->isUpper($first[$i + 1]) || $this->isUpper($first[$i + 1]));
+            $next = $i != 0 && ($this->isUpper($first[$i - 1]) xor $this->isUpper($second[$i - 1]));
+            $prev = $i != $len - 1 && ($this->isUpper($first[$i + 1]) xor $this->isUpper($second[$i + 1]));
             if ($next || $prev) {
                 continue;
             } elseif ($this->isUpper($first[$i]) && $this->isUpper($second[$i])) {
@@ -85,6 +91,19 @@ class RhymeDetector
         $second = strtolower($secondStressed);
     }
 
+    private function filterVowels(string $subj): string
+    {
+        $xres = implode(
+            $res = array_filter(
+                str_split($subj),
+                function (string $char): bool {
+                    return (bool)preg_match('/[aoieuwy]/i', $char);
+                }
+            )
+        );
+        return $xres;
+    }
+
     private function isUpper(string $char): bool
     {
         return $char == strtoupper($char);
@@ -92,6 +111,10 @@ class RhymeDetector
 
     private function equals(string $first, string $second): bool
     {
+        if ($first == '' && $second == '') {
+            return false;
+        }
+
         $y = $this->hasAttr(self::WEAK_E);
         $w = $this->hasAttr(self::WEAK_O);
 
