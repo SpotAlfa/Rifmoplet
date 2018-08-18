@@ -49,17 +49,38 @@ class TextIterator implements Iterator
         $this->rewind();
     }
 
+    /**
+     * Gets substring from {@see TextIterator::$text} using {@see TextIterator::$start} and {@see TextIterator::$end} as
+     * start and end indexes.
+     *
+     * @param int $left adjust start index
+     * @param int $right adjust end index
+     *
+     * @return string current substring
+     */
     public function slice(int $left = 0, int $right = 0): string
     {
         $right += $left;
         return substr($this->text, $this->start - $left, $this->end - $this->start + $right + 1);
     }
 
+    /**
+     * Getter for {@see TextIterator::$text}.
+     *
+     * @return string {@see TextIterator::$text}
+     */
     public function get(): string
     {
         return $this->text;
     }
 
+    /**
+     * Obtains distance to the first character before {@see TextIterator::$start} matching callback.
+     *
+     * @param callable $match callback-matcher
+     *
+     * @return int|false distance to the first match or false if nothing matches
+     */
     public function previous(callable $match)
     {
         for ($x = 1; $x <= $this->start; $x++) {
@@ -70,6 +91,13 @@ class TextIterator implements Iterator
         return false;
     }
 
+    /**
+     * Obtains distance to the first character after {@see TextIterator::$end} matching callback.
+     *
+     * @param callable $match callback-matcher
+     *
+     * @return int|false distance to the first match or false if nothing matches
+     */
     public function following(callable $match)
     {
         for ($x = 1, $len = $this->length - $this->end - 1; $x <= $len; $x++) {
