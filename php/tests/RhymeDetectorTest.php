@@ -15,9 +15,24 @@ use SpotAlfa\Rifmoplet\TextIterator;
 class RhymeDetectorTest extends TestCase
 {
 
-    public function testConfigure()
+    /**
+     * @dataProvider configProvider
+     *
+     * @param int $settings
+     * @param bool $expected
+     */
+    public function testConfigure(int $settings, bool $expected)
     {
+        $first = new TextIterator('irItikOf i kO', 4);
+        $second = new TextIterator('fEriti f nOfij kOt', 4);
+        $detector = new RhymeDetector($first, $second);
 
+        $first->next();
+        $second->next();
+        $detector->configure($settings);
+        $actual = $detector->isRhyme();
+
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -51,5 +66,13 @@ class RhymeDetectorTest extends TestCase
         ($args[3][1])->next();
 
         return $args;
+    }
+
+    public function configProvider(): array
+    {
+        return [
+            [0, false],
+            [RhymeDetector::ACCENT_SHIFT, true]
+        ];
     }
 }
