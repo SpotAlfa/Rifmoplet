@@ -137,6 +137,6 @@ class RhymeDetector
 
     private function hasAttr(int $attr): bool
     {
-        return $this->settings & $attr != 0;
+        return ($this->settings & $attr) != 0;
     }
 }
