@@ -120,6 +120,8 @@ class TextIteratorTest extends TestCase
      */
     public function testValid(): void
     {
+        /** @noinspection PhpStatementHasEmptyBodyInspection */
+        /** @noinspection PhpUnusedLocalVariableInspection */
         foreach ($this->stub as $value) {
             /* ... */
         }
@@ -149,11 +151,13 @@ class TextIteratorTest extends TestCase
     public function testRewind()
     {
         $i = 0;
+        /** @noinspection PhpUnusedLocalVariableInspection */
         foreach ($this->stub as $value) {
             $i++;
         }
 
         $j = 0;
+        /** @noinspection PhpUnusedLocalVariableInspection */
         foreach ($this->stub as $value) {
             $j++;
         }
