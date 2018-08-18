@@ -1,1 +1,1 @@
-tree .. /a
+tree . /a
