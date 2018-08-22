@@ -40,7 +40,7 @@ function array_unique(array $arr): array
     return $result;
 }
 
-$text = file_get_contents(__DIR__ . '/../resources/кем ты стал.txt');
+$text = file_get_contents(__DIR__ . '/../resources/признаки жизни.txt');
 $optionals = explode(PHP_EOL, file_get_contents(__DIR__ . '/../resources/optionals.dict'));
 $exceptions = [];
 foreach (explode(PHP_EOL, file_get_contents(__DIR__ . '/../resources/exceptions.dict')) as $line) {
@@ -92,7 +92,7 @@ for ($i = count($words) - 1; $i >= 0; $i--) {
 }
 
 $unit = function (string $char): bool {
-    return (bool)preg_match('/[!?@#$%^&*()\[\]\-=_+:;,.\s"\'aoueiwy]/i', $char);
+    return (bool)preg_match('/[!?@#$%^&*()\[\]\-=_+:;,.\s"\'aoueiwy~]/i', $char);
 };
 
 $totalRhymes = [];
@@ -148,6 +148,49 @@ for ($i = 12; $i >= 3; $i--) {
     }
 }
 
+foreach ($totalRhymes as $x => $rhymeGroup) {
+    foreach ($rhymeGroup as $i => $outer) {
+        foreach ($rhymeGroup as $j => $inner) {
+            if ($i == $j) {
+                continue;
+            }
+
+            list($a, $b) = $outer;
+            list($c, $d) = $inner;
+
+            if ($a >= $c && $a <= $d && $b > $c && $b > $d) {
+                unset($totalRhymes[$x][$j]);
+            }
+        }
+    }
+
+    if (count($rhymeGroup) <= 1) {
+        unset($totalRhymes[$x]);
+    }
+}
+
+foreach ($totalRhymes as $i => $outer) {
+    foreach ($totalRhymes as $j => $inner) {
+        if ($i == $j) {
+            continue;
+        }
+        foreach ($outer as $x => $first) {
+            foreach ($inner as $y => $second) {
+                list($a, $b) = $first;
+                list($c, $d) = $second;
+
+                if ($a >= $c && $a <= $d && $b > $c && $b > $d) {
+                    unset($totalRhymes[$j][$y]);
+                }
+            }
+        }
+
+        if (count($inner) <= 1) {
+            unset($totalRhymes[$j]);
+        }
+    }
+}
+
 foreach ($totalRhymes as $i => $outer) {
     foreach ($totalRhymes as $j => $inner) {
         if ($i == $j) {
@@ -171,13 +214,13 @@ foreach ($totalRhymes as $i => $outer) {
     }
 }
 
-/*foreach ($totalRhymes as $rhymeGroup) {
+foreach ($totalRhymes as $rhymeGroup) {
     foreach ($rhymeGroup as $rhyme) {
         list($start, $end) = $rhyme;
         echo mb_substr($text, $start, $end - $start + 1) . PHP_EOL;
     }
     echo PHP_EOL;
-}*/
+}
 
 $html = '';
 
@@ -207,6 +250,7 @@ array_walk($html, function (string &$line): void {
     $line = "<div class='space'>{$line}</div><br>" . PHP_EOL;
 });
 $html = implode($html);
+$html = str_replace('~', '', $html);
 
 /*preg_match_all('/[^!?@#$%^&*()\[\]\-=_+:;,.\s]+(?=\r\n)/', $text, $words);
 preg_match_all('/[^!?@#$%^&*()\[\]\-=_+:;,.\s]+(?=\r\n)/', $transcription, $transcriptions);
