@@ -41,42 +41,12 @@ function array_unique(array $arr): array
 }
 
 $text = file_get_contents(__DIR__ . '/../resources/кем ты стал.txt');
-
-$optionals = [
-    'всё',
-    'я',
-    'и',
-    'для',
-    'ты',
-    'не',
-    'на',
-    'кто',
-    'тем',
-    'тебе',
-    'про',
-    'все',
-    'а',
-    'что',
-    'же',
-    'за',
-    'чём',
-    'это',
-    'под',
-    'когда',
-    'эта',
-    'если',
-];
-$exceptions = [
-    'лям' => 'lAm',
-    'внемлет' => 'fnEmlit',
-    'демьян' => 'tim\'An',
-    'еблю' => 'Eplu',
-    'деньги' => 'tEn\'ki',
-    'про' => 'pra',
-    'о' => 'a',
-    'бочки' => 'pOqki',
-    'коротко' => 'kOrwtkw'
-];
+$optionals = explode(PHP_EOL, file_get_contents(__DIR__ . '/../resources/optionals.dict'));
+$exceptions = [];
+foreach (explode(PHP_EOL, file_get_contents(__DIR__ . '/../resources/exceptions.dict')) as $line) {
+    list($key, $value) = explode(' ', $line);
+    $exceptions[$key] = $value;
+}
 
 $words = preg_split('/[!?@#$%^&*()\[\]\-=_+:;,.\s"\']+/', mb_strtolower($text));
 try {
@@ -87,8 +57,8 @@ try {
 }
 $accents = $morph->getAccents(...$words);
 
-$cyr = 'АабвгдЕеЁёжзИийклмнОопрстУуфхцчшщъЫыьЭэЮюЯя';
-$lat = 'AapfktEyOohsIijklmnOwprstUufksqhq"Ii\'EyUuAi';
+$cyr = file_get_contents(__DIR__ . '/../resources/cyr.charset');
+$lat = file_get_contents(__DIR__ . '/../resources/lat.charset');
 $translator = new Translator($cyr, $lat);
 
 $transcriptions = [];
