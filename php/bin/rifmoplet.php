@@ -40,7 +40,7 @@ function array_unique(array $arr): array
     return $result;
 }
 
-$text = file_get_contents(__DIR__ . '/../resources/ядовитая сфера.txt');
+$text = file_get_contents(__DIR__ . '/../resources/кем ты стал.txt');
 
 $optionals = [
     'всё',
@@ -129,7 +129,7 @@ $unit = function (string $char): bool {
 };
 
 $totalRhymes = [];
-for ($i = 12; $i >= 6; $i--) {
+for ($i = 12; $i >= 3; $i--) {
     $outer = new TextIterator($transcription, $i);
     $inner = new TextIterator($transcription, $i);
     foreach ($outer as $outerStart => $outerEnd) {
@@ -227,7 +227,7 @@ foreach ($totalRhymes as $rhymeGroup) {
 
 ksort($indexes);
 
-print_r($indexes);
+//print_r($indexes);
 
 $prev = 0;
 foreach ($indexes as $index => $tag) {
@@ -241,7 +241,7 @@ array_walk($html, function (string &$line): void {
 });
 $html = implode($html);
 
-preg_match_all('/[^!?@#$%^&*()\[\]\-=_+:;,.\s]+(?=\r\n)/', $text, $words);
+/*preg_match_all('/[^!?@#$%^&*()\[\]\-=_+:;,.\s]+(?=\r\n)/', $text, $words);
 preg_match_all('/[^!?@#$%^&*()\[\]\-=_+:;,.\s]+(?=\r\n)/', $transcription, $transcriptions);
 
 $words = $words[0];
@@ -278,5 +278,5 @@ foreach ($transcriptions as $i => $outer) {
         }
     }
 }
-
+*/
 echo $html;
