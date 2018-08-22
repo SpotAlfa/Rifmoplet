@@ -67,7 +67,7 @@ class TextIteratorTest extends TestCase
     public function testPrevious(int $next, int $expected): void
     {
         $match = function (string $char): bool {
-            return (bool)preg_match('/[AEOIUWY]/', $char);
+            return (bool)preg_match('/[AEOIUWY~]/', $char);
         };
 
         for ($i = 0; $i < $next; $i++) {
@@ -89,7 +89,7 @@ class TextIteratorTest extends TestCase
     public function testFollowing(int $next, int $expected): void
     {
         $match = function (string $char): bool {
-            return (bool)preg_match('/[AEOIUWY]/', $char);
+            return (bool)preg_match('/[AEOIUWY~]/', $char);
         };
 
         for ($i = 0; $i < $next; $i++) {

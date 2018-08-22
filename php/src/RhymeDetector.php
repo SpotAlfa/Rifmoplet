@@ -81,7 +81,7 @@ class RhymeDetector
     private function hasAccentShift(): bool
     {
         $vowel = function (string $char): bool {
-            return (bool)preg_match('/[aeiouwy]/i', $char);
+            return (bool)preg_match('/[aeiouwy~]/i', $char);
         };
 
         $next = $this->first->following($vowel);
@@ -149,7 +149,7 @@ class RhymeDetector
             $res = array_filter(
                 str_split($subj),
                 function (string $char): bool {
-                    return (bool)preg_match('/[aoieuwy]/i', $char);
+                    return (bool)preg_match('/[aoieuwy~]/i', $char);
                 }
             )
         );

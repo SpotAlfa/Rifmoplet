@@ -125,7 +125,7 @@ class TextIterator implements Iterator
     {
         $this->end = $this->start + 1;
         for (; $this->valid(); $this->end++) {
-            if (preg_match('/[aeiouwy]/i', $this->text[$this->end])) {
+            if (preg_match('/[aeiouwy~]/i', $this->text[$this->end])) {
                 if ($this->syllable == 0) {
                     $this->start = $this->end;
                 }
