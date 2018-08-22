@@ -1,3 +1,7 @@
+# Common files
+
+docs/phpdocumentor
+
 # CSharp project
 
 cs/.vs
@@ -13,7 +17,6 @@ cs/packages
 
 php/.idea
 php/vendor
-php/docs/phpdocumentor
 
 # Common ST config
 
