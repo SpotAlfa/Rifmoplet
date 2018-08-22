@@ -100,8 +100,8 @@ class RhymeDetector
         $secondNext = $next !== false ? $this->isUpper($this->second->get()[$next + $this->second->current()]) : false;
         $secondPrev = $prev !== false ? $this->isUpper($this->second->get()[$this->second->key() - $prev]) : false;
 
-        $start = (!$firstStart && $secondPrev) || (!$secondStart && $firstPrev);
-        $end = (!$firstEnd && $secondNext) || (!$secondEnd && $firstNext);
+        $start = (!$firstStart && $firstPrev) || (!$secondStart && $secondPrev);
+        $end = (!$firstEnd && $firstNext) || (!$secondEnd && $secondNext);
 
         return $start || $end;
     }
@@ -119,11 +119,15 @@ class RhymeDetector
         $firstStressed = '';
         $secondStressed = '';
         for ($i = 0, $len = strlen($first); $i < $len; $i++) {
-            $next = $i != 0 && ($this->isUpper($first[$i - 1]) xor $this->isUpper($second[$i - 1]));
-            $prev = $i != $len - 1 && ($this->isUpper($first[$i + 1]) xor $this->isUpper($second[$i + 1]));
-            if ($next || $prev) {
-                continue;
-            } elseif ($this->isUpper($first[$i]) && $this->isUpper($second[$i])) {
+            // TODO: replace `break` with correct `continue`.
+            if ($this->isUpper($first[$i]) || $this->isUpper($second[$i])) {
+                $next = ($i != 0) && ($this->isUpper($first[$i - 1]) || $this->isUpper($second[$i - 1]));
+                $prev = ($i != $len - 1) && ($this->isUpper($first[$i + 1]) || $this->isUpper($second[$i + 1]));
+                if ($next || $prev) {
+                    $firstStressed = '';
+                    $secondStressed = '';
+                    break;
+                }
                 $firstStressed .= $first[$i];
                 $secondStressed .= $second[$i];
             }
