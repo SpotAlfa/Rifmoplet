@@ -91,9 +91,6 @@ for ($i = count($words) - 1; $i >= 0; $i--) {
     $transcription = str_replace($words[$i], $transcriptions[$i], $transcription);
 }
 
-//echo $transcription . PHP_EOL . PHP_EOL;
-//die();
-
 $unit = function (string $char): bool {
     return (bool)preg_match('/[!?@#$%^&*()\[\]\-=_+:;,.\s"\'aoueiwy]/i', $char);
 };
@@ -137,12 +134,12 @@ for ($i = 12; $i >= 3; $i--) {
             foreach ($totalRhymes as $key => $rhymeGroup) {
                 $diff1 = count(array_diff($rhymes, $rhymeGroup));
                 $diff2 = count(array_diff($rhymeGroup, $rhymes));
-                if ($diff1 != 0 && $diff1 < count($rhymes)) { // текущий массив вкючает в себя уже записанный
+                if ($diff1 != 0 && $diff1 < count($rhymes)) { // current array contains already saved
                     $totalRhymes[$key] = array_unique(array_merge($rhymes, $rhymeGroup));
                     continue 2;
-                } elseif ($diff2 != 0 && $diff2 < count($rhymeGroup)) { // уже записанный массив включает в себя текущий
+                } elseif ($diff2 != 0 && $diff2 < count($rhymeGroup)) { // already saved array contains current
                     continue 2;
-                } elseif ($diff1 == 0 && $diff2 == 0) { // массивы равны
+                } elseif ($diff1 == 0 && $diff2 == 0) { // these arrays are equal
                     continue 2;
                 }
             }
@@ -249,4 +246,5 @@ foreach ($transcriptions as $i => $outer) {
     }
 }
 */
+
 echo $html;
