@@ -1,0 +1,31 @@
+html {
+    font: bold 14px "Segoe Print";
+}
+
+div {
+    display: inline-block;
+}
+
+.rhyme {
+    border-radius: 6px;
+    color: #efefef;
+}
+
+.space {
+    margin: 1px 0 1px 0;
+}
+
+.a {
+    background: #c14e4e;
+    margin: 2px 0 2px 0
+}
+
+.b {
+    background: #3b8c3b;
+    padding: 0 2px 0 2px;
+}
+
+.c {
+    background: #6060ff;
+    padding: 0 2px 0 2px;
+}
