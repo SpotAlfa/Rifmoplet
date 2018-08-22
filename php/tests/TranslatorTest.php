@@ -26,12 +26,12 @@ class TranslatorTest extends TestCase
     public function testReplace(): void
     {
         $input = 'медвЕдь, вОдка, балалАйка, шАпка-ушАнка';
-        $translator = new Translator($input);
         $expectedOut = 'mytfEt\', fOtka, palalAjka, hApka-uhAnka';
-        $inCharset = preg_split('//u', 'АабвгдЕеЁёжзИийклмнОопрстУуфхцчшщъЫыьЭэЮюЯя', -1, PREG_SPLIT_NO_EMPTY);
-        $outCharset = str_split('AapfktEyOohsIijklmnOwprstUufksqhq"Ii\'EyUuAi');
+        $inCharset = 'АабвгдЕеЁёжзИийклмнОопрстУуфхцчшщъЫыьЭэЮюЯя';
+        $outCharset = 'AapfktEyOohsIijklmnOwprstUufksqhq"Ii\'EyUuAi';
+        $translator = new Translator($inCharset, $outCharset);
 
-        $actualOut = $translator->replace($inCharset, $outCharset);
+        $actualOut = $translator->replace($input);
 
         $this->assertEquals($expectedOut, $actualOut);
     }
