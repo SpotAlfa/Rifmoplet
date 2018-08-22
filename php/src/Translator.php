@@ -15,31 +15,32 @@ namespace SpotAlfa\Rifmoplet;
  */
 class Translator
 {
-    /** @var string processed text */
-    private $subject;
+    /** @var string[] key-value replace pairs */
+    private $replacePairs;
 
     /**
      * Translator constructor.
      *
-     * @param string $subject {@see Translator::$subject}
+     * @param string $in input charset
+     * @param string $out output charset
      */
-    public function __construct(string $subject)
+    public function __construct(string $in, string $out)
     {
-        $this->subject = $subject;
+        $in = preg_split('//u', $in, -1, PREG_SPLIT_NO_EMPTY);
+        $out = preg_split('//u', $out, -1, PREG_SPLIT_NO_EMPTY);
+
+        $this->replacePairs = array_combine($in, $out);
     }
 
     /**
      * Replaces characters in {@see Translator::$subject}.
      *
-     * @param array $in input charset
-     * @param array $out output charset
+     * @param string $subject string to process
      *
      * @return string processed string
      */
-    public function replace(array $in, array $out): string
+    public function replace(string $subject): string
     {
-        $replacePairs = array_combine($in, $out);
-
-        return strtr($this->subject, $replacePairs);
+        return strtr($subject, $this->replacePairs);
     }
 }
