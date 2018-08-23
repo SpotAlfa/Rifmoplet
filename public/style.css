@@ -1,5 +1,5 @@
 html {
-    font: 14px "Segoe Print";
+    font: 30px "Segoe Print";
 }
 
 div {
@@ -18,7 +18,7 @@ div {
 }
 
 .rhyme {
-    border-radius: 6px;
+    border-radius: 15px;
     color: #efefef;
 }
 
