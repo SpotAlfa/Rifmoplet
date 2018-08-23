@@ -276,7 +276,7 @@ foreach ($indexes as $index => $tag) {
 $html .= mb_substr($text, $prev);
 $html = explode(PHP_EOL, $html);
 array_walk($html, function (string &$line): void {
-    $line = "<div class='space'>{$line}</div><br>" . PHP_EOL;
+    $line = "<div class='line'>{$line}</div><br>" . PHP_EOL;
 });
 $html = implode($html);
 $html = str_replace('~', '', $html);
