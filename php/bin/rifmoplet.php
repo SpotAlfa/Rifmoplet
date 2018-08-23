@@ -12,7 +12,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 function isUpper(string $char): bool
 {
-    return strtoupper($char) == $char;
+    return strtoupper($char) == $char && $char != '~';
 }
 
 function array_diff(array $first, array $second): array
@@ -40,7 +40,7 @@ function array_unique(array $arr): array
     return $result;
 }
 
-$text = file_get_contents(__DIR__ . '/../resources/признаки жизни.txt');
+$text = file_get_contents(__DIR__ . '/../resources/восточный мордор.txt');
 $optionals = explode(PHP_EOL, file_get_contents(__DIR__ . '/../resources/optionals.dict'));
 $exceptions = [];
 foreach (explode(PHP_EOL, file_get_contents(__DIR__ . '/../resources/exceptions.dict')) as $line) {
@@ -120,7 +120,7 @@ for ($i = 12; $i >= 3; $i--) {
                         $left = $left === false ? $innerStart : $left - 1;
                         $right = $inner->following($unit);
                         $right = $right === false ? strlen($transcription) - 1 : $right - 1;
-                        $rhymes[] = [$innerStart - $left, $innerEnd + $right];
+                        $rhymes[] = [$innerStart - $left, $innerEnd + $right, $rhyme];
                     }
                 }
             }
@@ -130,7 +130,7 @@ for ($i = 12; $i >= 3; $i--) {
             $left = $left === false ? $outerStart : $left - 1;
             $right = $outer->following($unit);
             $right = $right === false ? strlen($transcription) - 1 : $right - 1;
-            $rhymes[] = [$outerStart - $left, $outerEnd + $right];
+            $rhymes[] = [$outerStart - $left, $outerEnd + $right, mb_substr($text, $outerStart, $outerEnd - $outerStart + 1)];
             foreach ($totalRhymes as $key => $rhymeGroup) {
                 $diff1 = count(array_diff($rhymes, $rhymeGroup));
                 $diff2 = count(array_diff($rhymeGroup, $rhymes));
@@ -148,50 +148,17 @@ for ($i = 12; $i >= 3; $i--) {
     }
 }
 
-foreach ($totalRhymes as $x => $rhymeGroup) {
-    foreach ($rhymeGroup as $i => $outer) {
-        foreach ($rhymeGroup as $j => $inner) {
-            if ($i == $j) {
-                continue;
-            }
-
-            list($a, $b) = $outer;
-            list($c, $d) = $inner;
-
-            if ($a >= $c && $a <= $d && $b > $c && $b > $d) {
-                unset($totalRhymes[$x][$j]);
-            }
-        }
-    }
-
-    if (count($rhymeGroup) <= 1) {
-        unset($totalRhymes[$x]);
-    }
+foreach ($totalRhymes as &$rhymeGroup) {
+    usort($rhymeGroup, function (array $a, array $b): int {
+        return $b[0] - $a[0];
+    });
 }
+unset($rhymeGroup);
+rsort($totalRhymes);
 
-foreach ($totalRhymes as $i => $outer) {
-    foreach ($totalRhymes as $j => $inner) {
-        if ($i == $j) {
-            continue;
-        }
-        foreach ($outer as $x => $first) {
-            foreach ($inner as $y => $second) {
-                list($a, $b) = $first;
-                list($c, $d) = $second;
+// TODO: resolve index chains.
 
-                if ($a >= $c && $a <= $d && $b > $c && $b > $d) {
-                    unset($totalRhymes[$j][$y]);
-                }
-            }
-        }
-
-        if (count($inner) <= 1) {
-            unset($totalRhymes[$j]);
-        }
-    }
-}
-
-foreach ($totalRhymes as $i => $outer) {
+foreach ($totalRhymes as $i => $outer) { // фильтрация вложенных рифм
     foreach ($totalRhymes as $j => $inner) {
         if ($i == $j) {
             continue;
@@ -214,6 +181,61 @@ foreach ($totalRhymes as $i => $outer) {
     }
 }
 
+localRhymes:
+foreach ($totalRhymes as $x => $rhymeGroup) { // разрешение пересечений внутри каждой группы
+    foreach ($rhymeGroup as $i => $outer) {
+        foreach ($rhymeGroup as $j => $inner) {
+            if ($i == $j) {
+                continue;
+            }
+
+            list($a, $b) = $outer;
+            list($c, $d) = $inner;
+
+            if ($a > $c && $a <= $d && $b > $c && $b > $d) {
+                unset($totalRhymes[$x][$j]);
+                if (count($totalRhymes[$x]) <= 1) {
+                    unset($totalRhymes[$x]);
+                }
+                goto localRhymes;
+            }
+        }
+    }
+
+    if (count($totalRhymes[$x]) <= 1) {
+        unset($totalRhymes[$x]);
+        goto localRhymes;
+    }
+}
+
+globalRhymes:
+foreach ($totalRhymes as $i => $outer) { // разрешение пересечений между разными группами
+    foreach ($totalRhymes as $j => $inner) {
+        if ($i == $j) {
+            continue;
+        }
+        foreach ($outer as $x => $first) {
+            foreach ($inner as $y => $second) {
+                list($a, $b) = $first;
+                list($c, $d) = $second;
+
+                if ($a > $c && $a <= $d && $b > $c && $b > $d) {
+                    unset($totalRhymes[$j][$y]);
+                    if (count($totalRhymes[$j]) <= 1) {
+                        unset($totalRhymes[$j]);
+                    }
+                    goto globalRhymes;
+                }
+            }
+        }
+
+        if (count($totalRhymes[$j]) <= 1) {
+            unset($totalRhymes[$j]);
+            goto globalRhymes;
+        }
+    }
+}
+
 foreach ($totalRhymes as $rhymeGroup) {
     foreach ($rhymeGroup as $rhyme) {
         list($start, $end) = $rhyme;
@@ -223,6 +245,13 @@ foreach ($totalRhymes as $rhymeGroup) {
 }
 
 $html = '';
+
+usort($totalRhymes, function (array $a, array  $b): int {
+    $a = preg_match_all('/[аеёиоуыэюя~]/iu', $a[0][2]);
+    $b = preg_match_all('/[аеёиоуыэюя~]/iu', $b[0][2]);
+
+    return $b - $a;
+});
 
 $class = 'a';
 $indexes = [];
@@ -251,6 +280,7 @@ array_walk($html, function (string &$line): void {
 });
 $html = implode($html);
 $html = str_replace('~', '', $html);
+$html = "<div class='outer'><div class='inner'>{$html}</div></div>";
 
 /*preg_match_all('/[^!?@#$%^&*()\[\]\-=_+:;,.\s]+(?=\r\n)/', $text, $words);
 preg_match_all('/[^!?@#$%^&*()\[\]\-=_+:;,.\s]+(?=\r\n)/', $transcription, $transcriptions);
