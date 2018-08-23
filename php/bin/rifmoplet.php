@@ -40,7 +40,7 @@ function array_unique(array $arr): array
     return $result;
 }
 
-$text = file_get_contents(__DIR__ . '/../resources/восточный мордор.txt');
+$text = file_get_contents(__DIR__ . '/../resources/кем ты стал.txt');
 $optionals = explode(PHP_EOL, file_get_contents(__DIR__ . '/../resources/optionals.dict'));
 $exceptions = [];
 foreach (explode(PHP_EOL, file_get_contents(__DIR__ . '/../resources/exceptions.dict')) as $line) {

@@ -165,7 +165,7 @@ class RhymeDetector
      */
     private function isUpper(string $char): bool
     {
-        return $char == strtoupper($char);
+        return $char == strtoupper($char) && $char != '~';
     }
 
     /**
