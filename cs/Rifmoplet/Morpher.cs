@@ -54,16 +54,6 @@ namespace Rifmoplet
             return NO_ACCENT;
         }
 
-        private string _PrepareWord(string word)
-        {
-            var win1251 = Encoding.GetEncoding(1251);
-            var win1252 = Encoding.GetEncoding(1252);
-
-            word = word.ToUpper();
-
-            return win1252.GetString(win1251.GetBytes(word));
-        }
-
         private string PrepareWord(string word)
         {
             return word.ToUpper();
