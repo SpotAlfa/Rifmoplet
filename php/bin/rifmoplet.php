@@ -40,10 +40,10 @@ function array_unique(array $arr): array
     return $result;
 }
 
-$text = file_get_contents(__DIR__ . '/../resources/кем ты стал.txt');
-$optionals = explode(PHP_EOL, file_get_contents(__DIR__ . '/../resources/optionals.dict'));
+$text = file_get_contents($argv[1]);
+$optionals = explode(PHP_EOL, file_get_contents(__DIR__ . '/../../resources/optionals.dict'));
 $exceptions = [];
-foreach (explode(PHP_EOL, file_get_contents(__DIR__ . '/../resources/exceptions.dict')) as $line) {
+foreach (explode(PHP_EOL, file_get_contents(__DIR__ . '/../../resources/exceptions.dict')) as $line) {
     list($key, $value) = explode(' ', $line);
     $exceptions[$key] = $value;
 }
@@ -57,8 +57,8 @@ try {
 }
 $accents = $morph->getAccents(...$words);
 
-$cyr = file_get_contents(__DIR__ . '/../resources/cyr.charset');
-$lat = file_get_contents(__DIR__ . '/../resources/lat.charset');
+$cyr = file_get_contents(__DIR__ . '/../../resources/cyr.charset');
+$lat = file_get_contents(__DIR__ . '/../../resources/lat.charset');
 $translator = new Translator($cyr, $lat);
 
 $transcriptions = [];
